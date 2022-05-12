@@ -75,8 +75,8 @@ sub _prepare_app {
 sub _load_category {
 	my $self = shift;
 
-	if ($self->{'_load_category'}
-		&& $self->{'_load_category'} eq $self->category) {
+	if ($self->{'_loaded_category'}
+		&& $self->{'_loaded_category'} eq $self->category) {
 
 		return;
 	}
