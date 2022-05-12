@@ -22,6 +22,11 @@ no_index:
     - t
     - xt
 requires:
+  Commons::Vote::Fetcher: 0
+  Error::Pure: 0
+  Plack::Request: 0
+  Plack::Util::Accessor: 0
+  Tags::HTML::Pager: 0
   perl: 5.8.0
 resources:
   bugtracker: https://github.com/michal-josef-spacek/Plack-App-Commons-Category/issues
