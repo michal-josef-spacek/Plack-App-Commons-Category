@@ -16,7 +16,7 @@ use Tags::HTML::Image::Grid;
 use Tags::HTML::Pager;
 use Unicode::UTF8 qw(decode_utf8 encode_utf8);
 
-Readonly::Scalar our $IMAGE_WIDTH => 200;
+Readonly::Scalar our $IMAGE_WIDTH => 340;
 Readonly::Scalar our $IMAGES_ON_PAGE => 24;
 
 our $VERSION = 0.01;
