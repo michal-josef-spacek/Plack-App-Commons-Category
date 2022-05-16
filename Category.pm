@@ -24,6 +24,7 @@ our $VERSION = 0.01;
 sub _css {
 	my $self = shift;
 
+	$self->{'_html_image_grid'}->process_css;
 	$self->{'_html_pager'}->process_css;
 
 	return;
