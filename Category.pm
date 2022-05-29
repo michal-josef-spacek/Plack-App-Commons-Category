@@ -147,6 +147,9 @@ sub _process_actions {
 
 	my $req = Plack::Request->new($env);
 
+	if ($req->parameters->{'category'}) {
+		$self->category(decode_utf8($req->parameters->{'category'}));
+	}
 	$self->_load_category;
 
 	$self->{'_actual_page'} = $req->parameters->{'page_num'};
@@ -155,10 +158,6 @@ sub _process_actions {
 	}
 	if ($self->{'_actual_page'} > $self->{'_pages_num'}) {
 		$self->{'_actual_page'} = $self->{'_pages_num'};
-	}
-
-	if ($req->parameters->{'category'}) {
-		$self->category(decode_utf8($req->parameters->{'category'}));
 	}
 
 	# Select images for page.
