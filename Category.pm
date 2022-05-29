@@ -71,10 +71,11 @@ sub _prepare_app {
 	);
 	$self->{'_html_image_grid'} = Tags::HTML::Image::Grid->new(
 		%p,
-		'img_width' => $self->image_width,
 		'img_src_cb' => sub {
-			return $self->{'_link'}->thumb_link($_[0], $self->image_width);
+			my $image = shift;
+			return $self->{'_link'}->thumb_link($image->image, $self->image_width);
 		},
+		'img_width' => $self->image_width,
 	);
 
 	return;
