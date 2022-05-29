@@ -22,11 +22,19 @@ no_index:
     - t
     - xt
 requires:
+  Commons::Link: 0
   Commons::Vote::Fetcher: 0
+  Data::Commons::Image: 0
   Error::Pure: 0
+  POSIX: 0
   Plack::Request: 0
   Plack::Util::Accessor: 0
+  Readonly: 0
+  Tags::HTML::Image: 0
+  Tags::HTML::Image::Grid: 0
   Tags::HTML::Pager: 0
+  URL::Encode: 0
+  Unicode::UTF8: 0
   perl: 5.8.0
 resources:
   bugtracker: https://github.com/michal-josef-spacek/Plack-App-Commons-Category/issues

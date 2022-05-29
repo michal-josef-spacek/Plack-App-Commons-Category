@@ -13,9 +13,11 @@ use Plack::Util::Accessor qw(category image_width images_on_page view_paginator
 	view_prev_next);
 use POSIX qw(ceil);
 use Readonly;
+use Tags::HTML::Image;
 use Tags::HTML::Image::Grid;
 use Tags::HTML::Pager;
 use Unicode::UTF8 qw(decode_utf8 encode_utf8);
+use URL::Encode qw(url_decode_utf8);
 
 Readonly::Scalar our $IMAGE_WIDTH => 340;
 Readonly::Scalar our $IMAGES_ON_PAGE => 24;
@@ -25,6 +27,7 @@ our $VERSION = 0.01;
 sub _css {
 	my $self = shift;
 
+	$self->{'_html_image'}->process_css;
 	$self->{'_html_image_grid'}->process_css;
 	$self->{'_html_pager'}->process_css;
 
@@ -69,8 +72,18 @@ sub _prepare_app {
 			'flag_prev_next' => $self->view_prev_next,
 		) : (),
 	);
+	$self->{'_html_image'} = Tags::HTML::Image->new(
+		%p,
+		'img_src_cb' => sub {
+			return $self->{'_link'}->link($_[0]);
+		},
+	);
 	$self->{'_html_image_grid'} = Tags::HTML::Image::Grid->new(
 		%p,
+		'img_link_cb' => sub {
+			my $image = shift;
+			return '?page=image&actual_image='.$image->image;
+		},
 		'img_src_cb' => sub {
 			my $image = shift;
 			return $self->{'_link'}->thumb_link($image->image, $self->image_width);
@@ -148,20 +161,50 @@ sub _process_actions {
 		@{$self->{'_images'}}[$page_begin_image_index .. $page_end_image_index],
 	];
 
+	if ($req->parameters->{'actual_image'}) {
+		$self->{'_actual_image'} = Data::Commons::Image->new(
+			'image' => url_decode_utf8($req->parameters->{'actual_image'}),
+		);
+	}
+
+	if ($req->parameters->{'page'}) {
+		$self->{'_page'} = $req->parameters->{'page'};
+	} else {
+		if (defined $self->category) {
+			$self->{'_page'} = 'category';
+		} else {
+			$self->{'_page'} = 'category_form';
+		}
+	}
+
 	return;
 }
 
 sub _tags_middle {
 	my $self = shift;
 
-	# Image grid.
-	$self->{'_html_image_grid'}->process($self->{'_page_images'});
-	
-	# Pager.
-	$self->{'_html_pager'}->process({
-		'actual_page' => $self->{'_actual_page'},
-		'pages_num' => $self->{'_pages_num'},
-	});
+	# Category form.
+	if ($self->{'_page'} eq 'category_form') {
+		# TODO Form with input box for category and submit button.
+
+	# Category view.
+	} elsif ($self->{'_page'} eq 'category') {
+
+		# Image grid.
+		$self->{'_html_image_grid'}->process($self->{'_page_images'});
+
+		# Pager.
+		$self->{'_html_pager'}->process({
+			'actual_page' => $self->{'_actual_page'},
+			'pages_num' => $self->{'_pages_num'},
+		});
+
+	# Image view.
+	} elsif ($self->{'_page'} eq 'image') {
+		$self->{'_html_image'}->process($self->{'_actual_image'});
+	}
+
+	# TODO Loading page.
 
 	return;
 }
