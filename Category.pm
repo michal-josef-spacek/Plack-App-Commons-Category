@@ -122,15 +122,19 @@ sub _process_actions {
 
 	my $req = Plack::Request->new($env);
 
+	$self->_load_category;
+
 	$self->{'_actual_page'} = $req->parameters->{'page'};
 	if (! $self->{'_actual_page'}) {
 		$self->{'_actual_page'} = 1;
+	}
+	if ($self->{'_actual_page'} > $self->{'_pages_num'}) {
+		$self->{'_actual_page'} = $self->{'_pages_num'};
 	}
 
 	if ($req->parameters->{'category'}) {
 		$self->category(decode_utf8($req->parameters->{'category'}));
 	}
-	$self->_load_category;
 
 	# Select images for page.
 	my $page_begin_image_index = ($self->{'_actual_page'} - 1) * $self->images_on_page;
