@@ -110,6 +110,7 @@ sub _load_category {
 		push @{$self->{'_images'}}, Data::Commons::Image->new(
 			# TODO Other information.
 			'image' => $image_hr->{'title'},
+			'comment' => $image_hr->{'title'},
 		);
 	}
 
