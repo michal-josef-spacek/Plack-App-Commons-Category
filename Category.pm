@@ -28,9 +28,12 @@ our $VERSION = 0.01;
 sub _css {
 	my $self = shift;
 
-	$self->{'_html_image'}->process_css;
-	$self->{'_html_image_grid'}->process_css;
-	$self->{'_html_pager'}->process_css;
+	if ($self->{'_page'} eq 'category') {
+		$self->{'_html_image_grid'}->process_css;
+		$self->{'_html_pager'}->process_css;
+	} elsif ($self->{'_page'} eq 'image') {
+		$self->{'_html_image'}->process_css;
+	}
 
 	return;
 }
