@@ -9,8 +9,8 @@ use Commons::Vote::Fetcher;
 use Data::Commons::Image;
 use Error::Pure qw(err);
 use Plack::Request;
-use Plack::Util::Accessor qw(category image_width images_on_page view_paginator
-	view_prev_next);
+use Plack::Util::Accessor qw(category image_grid_width image_width images_on_page
+	view_paginator view_prev_next);
 use POSIX qw(ceil);
 use Readonly;
 use Tags::HTML::Image;
@@ -19,7 +19,8 @@ use Tags::HTML::Pager;
 use Unicode::UTF8 qw(decode_utf8 encode_utf8);
 use URL::Encode qw(url_decode_utf8);
 
-Readonly::Scalar our $IMAGE_WIDTH => 340;
+Readonly::Scalar our $IMAGE_WIDTH => 800;
+Readonly::Scalar our $IMAGE_GRID_WIDTH => 340;
 Readonly::Scalar our $IMAGES_ON_PAGE => 24;
 
 our $VERSION = 0.01;
@@ -51,6 +52,11 @@ sub _prepare_app {
 		$self->image_width($IMAGE_WIDTH);
 	}
 
+	# Default value for image grid width.
+	if (! defined $self->image_grid_width) {
+		$self->image_grid_width($IMAGE_GRID_WIDTH);
+	}
+
 	# Wikimedia Commons link object.
 	$self->{'_link'} = Commons::Link->new;
 
@@ -75,7 +81,8 @@ sub _prepare_app {
 	$self->{'_html_image'} = Tags::HTML::Image->new(
 		%p,
 		'img_src_cb' => sub {
-			return $self->{'_link'}->link($_[0]);
+			my $image = shift;
+			return $self->{'_link'}->thumb_link($image->image, $self->image_width);
 		},
 	);
 	$self->{'_html_image_grid'} = Tags::HTML::Image::Grid->new(
@@ -86,9 +93,9 @@ sub _prepare_app {
 		},
 		'img_src_cb' => sub {
 			my $image = shift;
-			return $self->{'_link'}->thumb_link($image->image, $self->image_width);
+			return $self->{'_link'}->thumb_link($image->image, $self->image_grid_width);
 		},
-		'img_width' => $self->image_width,
+		'img_width' => $self->image_grid_width,
 	);
 
 	return;
