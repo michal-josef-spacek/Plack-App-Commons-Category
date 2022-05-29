@@ -60,7 +60,7 @@ sub _prepare_app {
 		'url_page_cb' => sub {
 			my $page = shift;
 
-			return '?page='.$page;
+			return '?page_num='.$page;
 		},
 		defined $self->view_paginator ? (
 			'flag_paginator' => $self->view_paginator,
@@ -125,7 +125,7 @@ sub _process_actions {
 
 	$self->_load_category;
 
-	$self->{'_actual_page'} = $req->parameters->{'page'};
+	$self->{'_actual_page'} = $req->parameters->{'page_num'};
 	if (! $self->{'_actual_page'}) {
 		$self->{'_actual_page'} = 1;
 	}
