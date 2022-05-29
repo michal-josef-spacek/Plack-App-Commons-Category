@@ -9,7 +9,8 @@ use Commons::Vote::Fetcher;
 use Data::Commons::Image;
 use Error::Pure qw(err);
 use Plack::Request;
-use Plack::Util::Accessor qw(category image_width images_on_page);
+use Plack::Util::Accessor qw(category image_width images_on_page view_paginator
+	view_prev_next);
 use POSIX qw(ceil);
 use Readonly;
 use Tags::HTML::Image::Grid;
@@ -60,7 +61,13 @@ sub _prepare_app {
 			my $page = shift;
 
 			return '?page='.$page;
-		}
+		},
+		defined $self->view_paginator ? (
+			'flag_paginator' => $self->view_paginator,
+		) : (),
+		defined $self->view_prev_next ? (
+			'flag_prev_next' => $self->view_prev_next,
+		) : (),
 	);
 	$self->{'_html_image_grid'} = Tags::HTML::Image::Grid->new(
 		%p,
