@@ -5,7 +5,8 @@ TODO
 Issue is with ';'
 4. Paging in loading.
 5. Rewrite category_form to some Tags::HTML helper.
-6.
+6. Implement texts in languages.
+7.
 
 Applied
 =======
