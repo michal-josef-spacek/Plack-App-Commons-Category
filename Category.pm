@@ -41,10 +41,6 @@ sub _css {
 sub _prepare_app {
 	my $self = shift;
 
-	if (! $self->category) {
-		err 'No category.';
-	}
-
 	# Default value for images on page.
 	if (! defined $self->images_on_page) {
 		$self->images_on_page($IMAGES_ON_PAGE);
@@ -72,7 +68,7 @@ sub _prepare_app {
 		'url_page_cb' => sub {
 			my $page = shift;
 
-			return '?page_num='.$page;
+			return '?page=category&page_num='.$page;
 		},
 		defined $self->view_paginator ? (
 			'flag_paginator' => $self->view_paginator,
@@ -147,42 +143,44 @@ sub _process_actions {
 
 	my $req = Plack::Request->new($env);
 
-	if ($req->parameters->{'category'}) {
-		$self->category(decode_utf8($req->parameters->{'category'}));
-	}
-	$self->_load_category;
-
-	$self->{'_actual_page'} = $req->parameters->{'page_num'};
-	if (! $self->{'_actual_page'}) {
-		$self->{'_actual_page'} = 1;
-	}
-	if ($self->{'_actual_page'} > $self->{'_pages_num'}) {
-		$self->{'_actual_page'} = $self->{'_pages_num'};
-	}
-
-	# Select images for page.
-	my $page_begin_image_index = ($self->{'_actual_page'} - 1) * $self->images_on_page;
-	my $page_end_image_index = ($self->{'_actual_page'} * $self->images_on_page) - 1;
-	if ($page_end_image_index + 1 > $self->{'_images_count'}) {
-		$page_end_image_index = $self->{'_images_count'} - 1;
-	}
-	$self->{'_page_images'} = [
-		@{$self->{'_images'}}[$page_begin_image_index .. $page_end_image_index],
-	];
-
-	if ($req->parameters->{'actual_image'}) {
-		$self->{'_actual_image'} = Data::Commons::Image->new(
-			'image' => url_decode_utf8($req->parameters->{'actual_image'}),
-		);
-	}
-
+	# Process which on which page we are.
 	if ($req->parameters->{'page'}) {
 		$self->{'_page'} = $req->parameters->{'page'};
 	} else {
-		if (defined $self->category) {
-			$self->{'_page'} = 'category';
-		} else {
-			$self->{'_page'} = 'category_form';
+		$self->{'_page'} = 'category_form';
+	}
+
+	# Category page.
+	if ($self->{'_page'} eq 'category') {
+		if ($req->parameters->{'category'}) {
+			$self->category(decode_utf8($req->parameters->{'category'}));
+		}
+		$self->_load_category;
+
+		$self->{'_actual_page'} = $req->parameters->{'page_num'};
+		if (! $self->{'_actual_page'}) {
+			$self->{'_actual_page'} = 1;
+		}
+		if ($self->{'_actual_page'} > $self->{'_pages_num'}) {
+			$self->{'_actual_page'} = $self->{'_pages_num'};
+		}
+
+		# Select images for page.
+		my $page_begin_image_index = ($self->{'_actual_page'} - 1) * $self->images_on_page;
+		my $page_end_image_index = ($self->{'_actual_page'} * $self->images_on_page) - 1;
+		if ($page_end_image_index + 1 > $self->{'_images_count'}) {
+			$page_end_image_index = $self->{'_images_count'} - 1;
+		}
+		$self->{'_page_images'} = [
+			@{$self->{'_images'}}[$page_begin_image_index .. $page_end_image_index],
+		];
+
+	# Image page.
+	} elsif ($self->{'_page'} eq 'image') {
+		if ($req->parameters->{'actual_image'}) {
+			$self->{'_actual_image'} = Data::Commons::Image->new(
+				'image' => url_decode_utf8($req->parameters->{'actual_image'}),
+			);
 		}
 	}
 
@@ -194,7 +192,39 @@ sub _tags_middle {
 
 	# Category form.
 	if ($self->{'_page'} eq 'category_form') {
-		# TODO Form with input box for category and submit button.
+		$self->{'tags'}->put(
+			['b', 'form'],
+			['a', 'method', 'GET'],
+
+			['b', 'fieldset'],
+			['b', 'legend'],
+			['d', 'Wikimedia Commons category form'],
+			['e', 'legend'],
+
+			['b', 'p'],
+			['b', 'label'],
+			['a', 'for', 'category'],
+			['e', 'label'],
+			['d', 'Category'],
+			['b', 'input'],
+			['a', 'type', 'text'],
+			['a', 'name', 'category'],
+			['a', 'id', 'category'],
+			['e', 'input'],
+			['e', 'p'],
+
+			['b', 'p'],
+			['b', 'button'],
+			['a', 'type', 'submit'],
+			['a', 'name', 'page'],
+			['a', 'value', 'category'],
+			['d', 'View category'],
+			['e', 'button'],
+			['e', 'p'],
+
+			['e', 'fieldset'],
+			['e', 'form'],
+		);
 
 	# Category view.
 	} elsif ($self->{'_page'} eq 'category') {
