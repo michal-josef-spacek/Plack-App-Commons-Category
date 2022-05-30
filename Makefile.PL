@@ -22,6 +22,7 @@ requires 'Commons::Link' => 0;
 requires 'Commons::Vote::Fetcher' => 0;
 requires 'Data::Commons::Image' => 0;
 requires 'Error::Pure' => 0;
+requires 'Plack::Component::Tags::HTML' => 0;
 requires 'Plack::Request' => 0;
 requires 'Plack::Util::Accessor' => 0;
 requires 'POSIX' => 0;

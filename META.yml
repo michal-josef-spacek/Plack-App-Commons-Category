@@ -27,6 +27,7 @@ requires:
   Data::Commons::Image: 0
   Error::Pure: 0
   POSIX: 0
+  Plack::Component::Tags::HTML: 0
   Plack::Request: 0
   Plack::Util::Accessor: 0
   Readonly: 0
