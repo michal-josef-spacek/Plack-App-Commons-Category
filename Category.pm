@@ -9,7 +9,7 @@ use Commons::Vote::Fetcher;
 use Data::Commons::Image;
 use Error::Pure qw(err);
 use Plack::Request;
-use Plack::Util::Accessor qw(category image_grid_width image_width images_on_page
+use Plack::Util::Accessor qw(category content_after_form image_grid_width image_width images_on_page
 	view_paginator view_prev_next);
 use POSIX qw(ceil);
 use Readonly;
@@ -225,6 +225,9 @@ sub _tags_middle {
 			['e', 'fieldset'],
 			['e', 'form'],
 		);
+
+		# Extra conent after form.
+		$self->content_after_form->($self);
 
 	# Category view.
 	} elsif ($self->{'_page'} eq 'category') {
