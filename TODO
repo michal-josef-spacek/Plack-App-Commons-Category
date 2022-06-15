@@ -4,7 +4,6 @@ TODO
 3. What about tif image like https://commons.wikimedia.org/wiki/File:Germany,_Prague._Statue_to_Patron_Saint;_Cathedral_in_background_LCCN2016820909.tif
 Issue is with ';'
 4. Paging in loading.
-5. Rewrite category_form to some Tags::HTML helper.
 6. Implement texts in languages.
 7. Implement highlight for some photos (colored border)
 8. Add doc.
@@ -14,3 +13,6 @@ Applied
 =======
 2. Implement category form.
 OK [20220530] skim
+
+5. Rewrite category_form to some Tags::HTML helper.
+OK [20220616] skim

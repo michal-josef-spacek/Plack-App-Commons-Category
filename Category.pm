@@ -13,6 +13,7 @@ use Plack::Util::Accessor qw(category content_after_form image_grid_width image_
 	view_paginator view_prev_next);
 use POSIX qw(ceil);
 use Readonly;
+use Tags::HTML::Form;
 use Tags::HTML::Image;
 use Tags::HTML::Image::Grid;
 use Tags::HTML::Pager;
@@ -62,6 +63,16 @@ sub _prepare_app {
 	my %p = (
 		'css' => $self->css,
 		'tags' => $self->tags,
+	);
+	$self->{'_html_form'} = Tags::HTML::Form->new(
+		%p,
+		'fields' => [{
+			'id' => 'category',
+			'text' => 'Category',
+			'type' => 'text',
+		}],
+		'submit' => 'View category',
+		'title' => 'Wikimedia Commons category form',
 	);
 	$self->{'_html_pager'} = Tags::HTML::Pager->new(
 		%p,
@@ -192,39 +203,7 @@ sub _tags_middle {
 
 	# Category form.
 	if ($self->{'_page'} eq 'category_form') {
-		$self->{'tags'}->put(
-			['b', 'form'],
-			['a', 'method', 'GET'],
-
-			['b', 'fieldset'],
-			['b', 'legend'],
-			['d', 'Wikimedia Commons category form'],
-			['e', 'legend'],
-
-			['b', 'p'],
-			['b', 'label'],
-			['a', 'for', 'category'],
-			['e', 'label'],
-			['d', 'Category'],
-			['b', 'input'],
-			['a', 'type', 'text'],
-			['a', 'name', 'category'],
-			['a', 'id', 'category'],
-			['e', 'input'],
-			['e', 'p'],
-
-			['b', 'p'],
-			['b', 'button'],
-			['a', 'type', 'submit'],
-			['a', 'name', 'page'],
-			['a', 'value', 'category'],
-			['d', 'View category'],
-			['e', 'button'],
-			['e', 'p'],
-
-			['e', 'fieldset'],
-			['e', 'form'],
-		);
+		$self->{'_html_form'}->process;
 
 		# Extra conent after form.
 		$self->content_after_form->($self);
