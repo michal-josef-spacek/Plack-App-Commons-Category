@@ -7,7 +7,8 @@ Issue is with ';'
 5. Rewrite category_form to some Tags::HTML helper.
 6. Implement texts in languages.
 7. Implement highlight for some photos (colored border)
-8.
+8. Add doc.
+9.
 
 Applied
 =======
