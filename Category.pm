@@ -10,7 +10,7 @@ use Data::Commons::Image;
 use Error::Pure qw(err);
 use Plack::Request;
 use Plack::Util::Accessor qw(category content_after_form image_grid_width image_width images_on_page
-	view_paginator view_prev_next);
+	page view_paginator view_prev_next);
 use POSIX qw(ceil);
 use Readonly;
 use Tags::HTML::Form;
@@ -157,6 +157,8 @@ sub _process_actions {
 	# Process which on which page we are.
 	if ($req->parameters->{'page'}) {
 		$self->{'_page'} = $req->parameters->{'page'};
+	} elsif (defined $self->page) {
+		$self->{'_page'} = $self->page;
 	} else {
 		$self->{'_page'} = 'category_form';
 	}
