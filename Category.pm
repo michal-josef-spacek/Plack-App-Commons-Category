@@ -206,7 +206,9 @@ sub _tags_middle {
 		$self->{'_html_form'}->process;
 
 		# Extra conent after form.
-		$self->content_after_form->($self);
+		if (defined $self->content_after_form) {
+			$self->content_after_form->($self);
+		}
 
 	# Category view.
 	} elsif ($self->{'_page'} eq 'category') {
