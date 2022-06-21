@@ -72,6 +72,8 @@ sub _prepare_app {
 			'type' => 'text',
 		}],
 		'submit' => 'View category',
+		'submit_name' => 'page',
+		'submit_value' => 'category',
 		'title' => 'Wikimedia Commons category form',
 	);
 	$self->{'_html_pager'} = Tags::HTML::Pager->new(
