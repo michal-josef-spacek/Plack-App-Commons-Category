@@ -7,6 +7,9 @@ use warnings;
 use Commons::Link;
 use Commons::Vote::Fetcher;
 use Data::Commons::Image;
+use Data::HTML::Button;
+use Data::HTML::Form;
+use Data::HTML::Form::Input;
 use Error::Pure qw(err);
 use Plack::Request;
 use Plack::Util::Accessor qw(category content_after_form image_grid_width image_width images_on_page
@@ -66,15 +69,18 @@ sub _prepare_app {
 	);
 	$self->{'_html_form'} = Tags::HTML::Form->new(
 		%p,
-		'fields' => [{
-			'id' => 'category',
-			'text' => 'Category',
-			'type' => 'text',
-		}],
-		'submit' => 'View category',
-		'submit_name' => 'page',
-		'submit_value' => 'category',
-		'title' => 'Wikimedia Commons category form',
+		'form' => Data::HTML::Form->new(
+			'css_class' => 'form',
+			'label' => 'Wikimedia Commons category form',
+		),
+		'submit' => Data::HTML::Button->new(
+			'data' => [
+				['d', 'View category'],
+			],
+			'name' => 'page',
+			'type' => 'submit',
+			'value' => 'category',
+		),
 	);
 	$self->{'_html_pager'} = Tags::HTML::Pager->new(
 		%p,
@@ -207,7 +213,11 @@ sub _tags_middle {
 
 	# Category form.
 	if ($self->{'_page'} eq 'category_form') {
-		$self->{'_html_form'}->process;
+		$self->{'_html_form'}->process(Data::HTML::Form::Input->new(
+			'id' => 'category',
+			'label' => 'Category',
+			'type' => 'text',
+		));
 
 		# Extra conent after form.
 		if (defined $self->content_after_form) {

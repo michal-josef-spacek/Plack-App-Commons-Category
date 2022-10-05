@@ -25,13 +25,16 @@ requires:
   Commons::Link: 0
   Commons::Vote::Fetcher: 0
   Data::Commons::Image: 0
+  Data::HTML::Button: 0
+  Data::HTML::Form: 0
+  Data::HTML::Form::Input: 0
   Error::Pure: 0
   POSIX: 0
   Plack::Component::Tags::HTML: 0
   Plack::Request: 0
   Plack::Util::Accessor: 0
   Readonly: 0
-  Tags::HTML::Form: 0
+  Tags::HTML::Form: 0.03
   Tags::HTML::Image: 0
   Tags::HTML::Image::Grid: 0
   Tags::HTML::Pager: 0
