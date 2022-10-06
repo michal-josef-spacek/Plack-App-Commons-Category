@@ -37,7 +37,8 @@ requires:
   Tags::HTML::Form: 0.03
   Tags::HTML::Image: 0
   Tags::HTML::Image::Grid: 0
-  Tags::HTML::Pager: 0
+  Tags::HTML::Pager: 0.04
+  Tags::HTML::Pager::Utils: 0.04
   URL::Encode: 0
   Unicode::UTF8: 0
   perl: 5.8.0

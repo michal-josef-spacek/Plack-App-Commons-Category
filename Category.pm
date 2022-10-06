@@ -11,8 +11,6 @@ use Data::HTML::Button;
 use Data::HTML::Form;
 use Data::HTML::Form::Input;
 use Error::Pure qw(err);
-use Plack::App::Commons::Category::Utils qw(adjust_actual_page
-	compute_index_values pages_num);
 use Plack::Request;
 use Plack::Util::Accessor qw(category content_after_form image_grid_width image_width images_on_page
 	page view_paginator view_prev_next);
@@ -21,6 +19,8 @@ use Tags::HTML::Form;
 use Tags::HTML::Image;
 use Tags::HTML::Image::Grid;
 use Tags::HTML::Pager;
+use Tags::HTML::Pager::Utils qw(adjust_actual_page
+	compute_index_values pages_num);
 use Unicode::UTF8 qw(decode_utf8 encode_utf8);
 use URL::Encode qw(url_decode_utf8);
 
