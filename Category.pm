@@ -101,18 +101,18 @@ sub _prepare_app {
 		%p,
 		'img_src_cb' => sub {
 			my $image = shift;
-			return $self->{'_link'}->thumb_link($image->image, $self->image_width);
+			return $self->{'_link'}->thumb_link($image->commons_name, $self->image_width);
 		},
 	);
 	$self->{'_html_image_grid'} = Tags::HTML::Image::Grid->new(
 		%p,
 		'img_link_cb' => sub {
 			my $image = shift;
-			return '?page=image&actual_image='.$image->image;
+			return '?page=image&actual_image='.$image->commons_name;
 		},
 		'img_src_cb' => sub {
 			my $image = shift;
-			return $self->{'_link'}->thumb_link($image->image, $self->image_grid_width);
+			return $self->{'_link'}->thumb_link($image->commons_name, $self->image_grid_width);
 		},
 		'img_width' => $self->image_grid_width,
 	);
@@ -144,8 +144,8 @@ sub _load_category {
 	foreach my $image_hr (@images) {
 		push @{$self->{'_images'}}, Data::Commons::Image->new(
 			# TODO Other information.
-			'image' => $image_hr->{'title'},
 			'comment' => $image_hr->{'title'},
+			'commons_name' => $image_hr->{'title'},
 		);
 	}
 
