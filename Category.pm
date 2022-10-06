@@ -11,10 +11,11 @@ use Data::HTML::Button;
 use Data::HTML::Form;
 use Data::HTML::Form::Input;
 use Error::Pure qw(err);
+use Plack::App::Commons::Category::Utils qw(adjust_actual_page
+	compute_index_values pages_num);
 use Plack::Request;
 use Plack::Util::Accessor qw(category content_after_form image_grid_width image_width images_on_page
 	page view_paginator view_prev_next);
-use POSIX qw(ceil);
 use Readonly;
 use Tags::HTML::Form;
 use Tags::HTML::Image;
@@ -133,11 +134,7 @@ sub _load_category {
 
 	# Get list of photos in category.
 	my @images = Commons::Vote::Fetcher->new->images_in_category($self->category);
-	if (@images) {
-		$self->{'_pages_num'} = ceil(scalar @images / $self->images_on_page);
-	} else {
-		$self->{'_pages_num'} = 0;
-	}
+	$self->{'_pages_num'} = pages_num(scalar @images, $self->images_on_page);
 
 	# Images count.
 	$self->{'_images_count'} = scalar @images;
@@ -178,23 +175,20 @@ sub _process_actions {
 		}
 		$self->_load_category;
 
-		$self->{'_actual_page'} = $req->parameters->{'page_num'};
-		if (! $self->{'_actual_page'}) {
-			$self->{'_actual_page'} = 1;
-		}
-		if ($self->{'_actual_page'} > $self->{'_pages_num'}) {
-			$self->{'_actual_page'} = $self->{'_pages_num'};
-		}
+		# Adjust actual page.
+		$self->{'_actual_page'} = adjust_actual_page($req->parameters->{'page_num'},
+			$self->{'_pages_num'});
 
 		# Select images for page.
-		my $page_begin_image_index = ($self->{'_actual_page'} - 1) * $self->images_on_page;
-		my $page_end_image_index = ($self->{'_actual_page'} * $self->images_on_page) - 1;
-		if ($page_end_image_index + 1 > $self->{'_images_count'}) {
-			$page_end_image_index = $self->{'_images_count'} - 1;
+		my ($page_begin_image_index, $page_end_image_index) = compute_index_values(
+			$self->{'_images_count'}, $self->{'_actual_page'}, $self->images_on_page);
+		if (defined $page_begin_image_index && defined $page_end_image_index) {
+			$self->{'_page_images'} = [
+				@{$self->{'_images'}}[$page_begin_image_index .. $page_end_image_index],
+			];
+		} else {
+			$self->{'_page_images'} = $self->{'_images'};
 		}
-		$self->{'_page_images'} = [
-			@{$self->{'_images'}}[$page_begin_image_index .. $page_end_image_index],
-		];
 
 	# Image page.
 	} elsif ($self->{'_page'} eq 'image') {
