@@ -148,6 +148,9 @@ sub _load_category {
 
 	# Get list of photos in category.
 	my @images = Commons::Vote::Fetcher->new->images_in_category($self->category);
+	if (! @images) {
+		return 0;
+	}
 	$self->{'_pages_num'} = pages_num(scalar @images, $self->images_on_page);
 
 	# Images count.
@@ -165,7 +168,7 @@ sub _load_category {
 
 	$self->{'_loaded_category'} = $self->category;
 
-	return;
+	return scalar @images;
 }
 
 sub _process_actions {
@@ -186,22 +189,30 @@ sub _process_actions {
 	if ($self->{'_page'} eq 'category') {
 		if ($req->parameters->{'category'}) {
 			$self->category(decode_utf8($req->parameters->{'category'}));
-		}
-		$self->_load_category;
+			my $images = $self->_load_category;
+			if ($images > 0) {
 
-		# Adjust actual page.
-		$self->{'_actual_page'} = adjust_actual_page($req->parameters->{'page_num'},
-			$self->{'_pages_num'});
+				# Adjust actual page.
+				$self->{'_actual_page'} = adjust_actual_page($req->parameters->{'page_num'},
+					$self->{'_pages_num'});
 
-		# Select images for page.
-		my ($page_begin_image_index, $page_end_image_index) = compute_index_values(
-			$self->{'_images_count'}, $self->{'_actual_page'}, $self->images_on_page);
-		if (defined $page_begin_image_index && defined $page_end_image_index) {
-			$self->{'_page_images'} = [
-				@{$self->{'_images'}}[$page_begin_image_index .. $page_end_image_index],
-			];
+				# Select images for page.
+				my ($page_begin_image_index, $page_end_image_index) = compute_index_values(
+					$self->{'_images_count'}, $self->{'_actual_page'}, $self->images_on_page);
+				if (defined $page_begin_image_index && defined $page_end_image_index) {
+					$self->{'_page_images'} = [
+						@{$self->{'_images'}}[$page_begin_image_index .. $page_end_image_index],
+					];
+				} else {
+					$self->{'_page_images'} = $self->{'_images'};
+				}
+			} else {
+				# XXX Message.
+				$self->{'_page'} = 'category_form';
+			}
 		} else {
-			$self->{'_page_images'} = $self->{'_images'};
+			# XXX Message.
+			$self->{'_page'} = 'category_form';
 		}
 
 	# Image page.
