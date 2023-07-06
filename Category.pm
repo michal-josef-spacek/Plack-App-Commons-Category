@@ -78,6 +78,7 @@ sub _prepare_app {
 			'data' => [
 				['d', 'View category'],
 			],
+			'data_type' => 'tags',
 			'name' => 'page',
 			'type' => 'submit',
 			'value' => 'category',
