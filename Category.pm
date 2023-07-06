@@ -144,10 +144,11 @@ sub _prepare_app {
 sub _load_category {
 	my $self = shift;
 
+	# Category was loaded.
 	if ($self->{'_loaded_category'}
 		&& $self->{'_loaded_category'} eq $self->category) {
 
-		return;
+		return scalar @{$self->{'_images'}};
 	}
 
 	# XXX Logging.
