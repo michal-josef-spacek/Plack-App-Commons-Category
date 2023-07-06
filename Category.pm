@@ -200,7 +200,7 @@ sub _process_actions {
 	} elsif ($self->{'_page'} eq 'image') {
 		if ($req->parameters->{'actual_image'}) {
 			$self->{'_actual_image'} = Data::Commons::Image->new(
-				'image' => url_decode_utf8($req->parameters->{'actual_image'}),
+				'commons_name' => url_decode_utf8($req->parameters->{'actual_image'}),
 			);
 		}
 	}

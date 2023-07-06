@@ -20,7 +20,7 @@ readme_from 'Category.pm';
 recursive_author_tests('xt');
 requires 'Commons::Link' => 0;
 requires 'Commons::Vote::Fetcher' => 0;
-requires 'Data::Commons::Image' => 0;
+requires 'Data::Commons::Image' => 0.06;
 requires 'Data::HTML::Button' => 0;
 requires 'Data::HTML::Form' => 0;
 requires 'Data::HTML::Form::Input' => 0;
