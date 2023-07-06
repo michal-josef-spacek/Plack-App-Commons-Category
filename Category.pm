@@ -46,6 +46,9 @@ sub _css {
 sub _prepare_app {
 	my $self = shift;
 
+	# Inherite defaults.
+	$self->SUPER::_prepare_app;
+
 	# Default value for images on page.
 	if (! defined $self->images_on_page) {
 		$self->images_on_page($IMAGES_ON_PAGE);
