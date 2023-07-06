@@ -22,6 +22,7 @@ use Tags::HTML::Pager;
 use Tags::HTML::Pager::Utils qw(adjust_actual_page
 	compute_index_values pages_num);
 use Unicode::UTF8 qw(decode_utf8 encode_utf8);
+use URI::Escape;
 
 Readonly::Scalar our $IMAGE_WIDTH => 800;
 Readonly::Scalar our $IMAGE_GRID_WIDTH => 340;
@@ -120,7 +121,7 @@ sub _prepare_app {
 		%p,
 		'img_link_cb' => sub {
 			my $image = shift;
-			return '?page=image&actual_image='.$image->commons_name;
+			return '?page=image&actual_image='.uri_escape_utf8($image->commons_name);
 		},
 		'img_src_cb' => sub {
 			my $image = shift;
