@@ -92,9 +92,16 @@ sub _prepare_app {
 	$self->{'_html_pager'} = Tags::HTML::Pager->new(
 		%p,
 		'url_page_cb' => sub {
-			my $page = shift;
+			my ($page_number, $pages_hr) = @_;
 
-			return '?page=category&page_num='.$page;
+			my $params = '';
+			if (defined $pages_hr && exists $pages_hr->{'query_params'}) {
+				foreach my $key (keys %{$pages_hr->{'query_params'}}) {
+					$params .= '&'.$key.'='.$pages_hr->{'query_params'}->{$key};
+				}
+			}
+
+			return '?page=category'.$params.'&page_num='.$page_number;
 		},
 		defined $self->view_paginator ? (
 			'flag_paginator' => $self->view_paginator,
@@ -189,6 +196,7 @@ sub _process_actions {
 	if ($self->{'_page'} eq 'category') {
 		if ($req->parameters->{'category'}) {
 			$self->category(decode_utf8($req->parameters->{'category'}));
+			$self->{'_query_params'}->{'category'} = $self->category;
 			my $images = $self->_load_category;
 			if ($images > 0) {
 
@@ -252,6 +260,7 @@ sub _tags_middle {
 		$self->{'_html_pager'}->process({
 			'actual_page' => $self->{'_actual_page'},
 			'pages_num' => $self->{'_pages_num'},
+			'query_params' => $self->{'_query_params'},
 		});
 
 	# Image view.
