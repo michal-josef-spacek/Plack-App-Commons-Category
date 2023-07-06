@@ -22,7 +22,6 @@ use Tags::HTML::Pager;
 use Tags::HTML::Pager::Utils qw(adjust_actual_page
 	compute_index_values pages_num);
 use Unicode::UTF8 qw(decode_utf8 encode_utf8);
-use URL::Encode qw(url_decode_utf8);
 
 Readonly::Scalar our $IMAGE_WIDTH => 800;
 Readonly::Scalar our $IMAGE_GRID_WIDTH => 340;
@@ -229,8 +228,7 @@ sub _process_actions {
 		if ($req->parameters->{'actual_image'}) {
 			$self->{'_html_image'}->init(
 				Data::Commons::Image->new(
-					'commons_name' => url_decode_utf8(
-						$req->parameters->{'actual_image'}),
+					'commons_name' => decode_utf8($req->parameters->{'actual_image'}),
 				),
 			);
 		}
