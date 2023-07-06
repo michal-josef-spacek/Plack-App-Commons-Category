@@ -199,8 +199,11 @@ sub _process_actions {
 	# Image page.
 	} elsif ($self->{'_page'} eq 'image') {
 		if ($req->parameters->{'actual_image'}) {
-			$self->{'_actual_image'} = Data::Commons::Image->new(
-				'commons_name' => url_decode_utf8($req->parameters->{'actual_image'}),
+			$self->{'_html_image'}->init(
+				Data::Commons::Image->new(
+					'commons_name' => url_decode_utf8(
+						$req->parameters->{'actual_image'}),
+				),
 			);
 		}
 	}
@@ -238,7 +241,7 @@ sub _tags_middle {
 
 	# Image view.
 	} elsif ($self->{'_page'} eq 'image') {
-		$self->{'_html_image'}->process($self->{'_actual_image'});
+		$self->{'_html_image'}->process;
 	}
 
 	# TODO Loading page.
