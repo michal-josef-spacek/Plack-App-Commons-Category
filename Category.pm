@@ -37,7 +37,7 @@ sub _css {
 		$self->{'_html_image_grid'}->process_css;
 		$self->{'_html_pager'}->process_css;
 	} elsif ($self->{'_page'} eq 'category_form') {
-		$self->{'_html_form'}->process_css;
+		$self->{'_html_form'}->process_css(@{$self->{'_form_fields'}});
 	} elsif ($self->{'_page'} eq 'image') {
 		$self->{'_html_image'}->process_css;
 	}
@@ -122,6 +122,14 @@ sub _prepare_app {
 		},
 		'img_width' => $self->image_grid_width,
 	);
+
+	$self->{'_form_fields'} = [
+		Data::HTML::Form::Input->new(
+			'id' => 'category',
+			'label' => 'Category',
+			'type' => 'text',
+		),
+	];
 
 	return;
 }
@@ -216,11 +224,7 @@ sub _tags_middle {
 
 	# Category form.
 	if ($self->{'_page'} eq 'category_form') {
-		$self->{'_html_form'}->process(Data::HTML::Form::Input->new(
-			'id' => 'category',
-			'label' => 'Category',
-			'type' => 'text',
-		));
+		$self->{'_html_form'}->process(@{$self->{'_form_fields'}});
 
 		# Extra conent after form.
 		if (defined $self->content_after_form) {
