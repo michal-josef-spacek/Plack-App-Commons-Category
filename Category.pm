@@ -37,7 +37,7 @@ sub _css {
 		$self->{'_html_image_grid'}->process_css;
 		$self->{'_html_pager'}->process_css;
 	} elsif ($self->{'_page'} eq 'category_form') {
-		$self->{'_html_form'}->process_css(@{$self->{'_form_fields'}});
+		$self->{'_html_form'}->process_css;
 	} elsif ($self->{'_page'} eq 'image') {
 		$self->{'_html_image'}->process_css;
 	}
@@ -137,6 +137,7 @@ sub _prepare_app {
 			'type' => 'text',
 		),
 	];
+	$self->{'_html_form'}->init(@{$self->{'_form_fields'}});
 
 	return;
 }
