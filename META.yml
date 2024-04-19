@@ -25,9 +25,9 @@ requires:
   Commons::Link: 0
   Commons::Vote::Fetcher: 0
   Data::Commons::Image: 0.06
-  Data::HTML::Button: 0
-  Data::HTML::Form: 0
-  Data::HTML::Form::Input: 0
+  Data::HTML::Element::Button: 0
+  Data::HTML::Element::Form: 0
+  Data::HTML::Element::Input: 0
   Error::Pure: 0
   POSIX: 0
   Plack::Component::Tags::HTML: 0.15

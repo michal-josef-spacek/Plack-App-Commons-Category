@@ -7,9 +7,9 @@ use warnings;
 use Commons::Link;
 use Commons::Vote::Fetcher;
 use Data::Commons::Image;
-use Data::HTML::Button;
-use Data::HTML::Form;
-use Data::HTML::Form::Input;
+use Data::HTML::Element::Button;
+use Data::HTML::Element::Form;
+use Data::HTML::Element::Input;
 use Error::Pure qw(err);
 use Plack::Request;
 use Plack::Util::Accessor qw(category content_after_form image_grid_width image_width images_on_page
@@ -75,11 +75,11 @@ sub _prepare_app {
 	);
 	$self->{'_html_form'} = Tags::HTML::Form->new(
 		%p,
-		'form' => Data::HTML::Form->new(
+		'form' => Data::HTML::Element::Form->new(
 			'css_class' => 'form',
 			'label' => 'Wikimedia Commons category form',
 		),
-		'submit' => Data::HTML::Button->new(
+		'submit' => Data::HTML::Element::Button->new(
 			'data' => [
 				['d', 'View category'],
 			],
@@ -131,7 +131,7 @@ sub _prepare_app {
 	);
 
 	$self->{'_form_fields'} = [
-		Data::HTML::Form::Input->new(
+		Data::HTML::Element::Input->new(
 			'id' => 'category',
 			'label' => 'Category',
 			'type' => 'text',
